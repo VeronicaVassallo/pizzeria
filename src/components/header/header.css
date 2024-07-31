@@ -1,0 +1,26 @@
+.header {
+	width: 100%;
+	height: 55vh;
+	background-size: cover;
+}
+.header_img1 {
+	background: url("https://foodmagazine.com.br/imagens/noticias/os-5-sabores-de-pizza-mais-pedidos-no-brasil-")
+		no-repeat center;
+	background-size: cover;
+}
+.header_img2 {
+	background: url("https://wips.plug.it/cips/initalia.virgilio.it/cms/2019/11/pizza-forno-legna.jpg")
+		no-repeat center;
+	background-size: cover;
+}
+.header_img3 {
+	background: url("https://siciliadagustare.com/wp-content/uploads/2023/04/mooddika-catania-STF08400-LD.jpg")
+		no-repeat center;
+	background-size: cover;
+}
+.title_header {
+	text-shadow: 2px 2px #000000;
+}
+.title_header > span {
+	font-size: 14pt;
+}

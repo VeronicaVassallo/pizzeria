@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 const initialState = {
 	products: [],
 	isLoading: false,
@@ -7,14 +8,15 @@ const initialState = {
 
 export const getListProducts = createAsyncThunk(
 	"products/getAllProducts",
-	async () => {
+	async (_, { rejectWithValue }) => {
 		try {
-			const responce = await fetch(
+			const response = await axios.get(
 				`${process.env.REACT_APP_SERVER_BASE_URL}/product`
 			);
-			return await responce.json();
+			return response.data; //Axios mette i dati nella proprietà `data`
 		} catch (error) {
-			console.log(`Errore in menuReducer.js :${error}`);
+			//Se c'è un errore rejectWithValue passare un errore personalizzato
+			return rejectWithValue(error.response?.data || "An error occurred");
 		}
 	}
 );

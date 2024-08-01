@@ -1,141 +1,51 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { allProducts, getListProducts } from "../../reducers/productReducer";
+import SearchbarBackoffice from "../../components/searchbarBackoffice/SearchbarBackoffice";
 
 export const Backoffice = () => {
 	const completeListProducts = useSelector(allProducts);
 	const dispatch = useDispatch();
 	const [listProducts, setListProducts] = useState([]);
+	const [categoryFromChild, setCategoryFromChild] = useState("");
 
-	//test
-	console.log("Tutti i prodotti", completeListProducts.products);
+	//functions
 
-	//data form
-	const [productName, setProductName] = useState("");
-	const [ingredients, setIngredients] = useState("");
-	const [price, setPrice] = useState(0);
-	const [img, setImg] = useState("");
-	const [typology, setTypology] = useState("");
-
-	const [error, setError] = useState("");
-
-	//new Product
-	let body = {
-		productName: productName,
-		ingredients: ingredients,
-		price: price,
-		img: img,
-		typology: typology,
+	const handleDataFromChild = (dataChild) => {
+		setCategoryFromChild(dataChild);
 	};
-
 	useEffect(() => {
 		dispatch(getListProducts());
 	}, [dispatch]);
-	const validateForm = () => {
-		if (!productName || !ingredients || !price || !typology) {
-			setError("Tutti i campi devono essere compilati!");
-			return false;
-		}
-		if (price <= 0) {
-			setError("Il valore del prezzo deve essere maggiore di zero!");
-			return false;
-		}
-		return true;
-	};
 
-	const insertData = (e) => {
-		e.preventDefault();
-		setError("");
+	const onFilterProducts = useCallback(
+		(category) => {
+			let productsFiltered = [];
+			if (completeListProducts && completeListProducts.products) {
+				productsFiltered = completeListProducts.products.filter((p) =>
+					p.typology.includes(category)
+				);
+				setListProducts(productsFiltered);
+			}
+		},
+		[completeListProducts]
+	);
 
-		if (validateForm()) {
-			setListProducts([...listProducts, body]);
-			setProductName("");
-			setIngredients("");
-			setPrice(0);
-			setImg("");
-			setTypology("");
-		}
-	};
+	useEffect(() => {
+		onFilterProducts(categoryFromChild);
+	}, [categoryFromChild, completeListProducts]);
 
 	return (
 		<>
-			<h2>Backoffice</h2>
+			<SearchbarBackoffice onSendData={handleDataFromChild} />
 			<div className="d-flex justify-content-around">
-				<form onSubmit={insertData}>
-					<div>
-						<label htmlFor="productName">Nome:</label>
-						<br />
-						<input
-							type="text"
-							value={productName || ""}
-							name="productName"
-							id="productName"
-							onChange={(e) => setProductName(e.target.value)}
-						/>
-					</div>
-					<div>
-						<label htmlFor="ingredients">Ingredienti:</label>
-						<br />
-						<input
-							type="text"
-							value={ingredients || ""}
-							name="ingredients"
-							id="ingredients"
-							onChange={(e) => setIngredients(e.target.value)}
-						/>
-					</div>
-					<div>
-						<label htmlFor="price">Prezzo:</label>
-						<br />
-						<input
-							type="number"
-							value={price}
-							name="price"
-							id="price"
-							onChange={(e) => setPrice(e.target.value)}
-						/>{" "}
-						€
-					</div>
-					<div>
-						<label htmlFor="img">Immagine:</label>
-						<br />
-						<input
-							type="text"
-							value={img || ""}
-							name="img"
-							id="img"
-							onChange={(e) => setImg(e.target.value)}
-						/>
-					</div>
-					<div>
-						<label htmlFor="typology">Categoria:</label>
-						<br />
-						<select
-							value={typology || ""}
-							name="typology"
-							id="typology"
-							onChange={(e) => setTypology(e.target.value)}
-						>
-							<option value="antipasto">antipasto</option>
-							<option value="contorno">contorno</option>
-							<option value="pizza">pizza</option>
-							<option value="primo">primo</option>
-							<option value="secondo">secondo</option>
-							<option value="bibita">bibita</option>
-							<option value="dessert">dessert</option>
-						</select>
-					</div>
-					{error && <p className="text-danger"> {error}</p>}
-					<button type="submit" className="btn btn-primary">
-						Salva
-					</button>
-				</form>
 				<div>
 					<p>Lista prodotti</p>
 					<ul>
-						{listProducts.map((p, i) => {
-							return <li key={i}>{p.productName}</li>;
-						})}
+						{listProducts &&
+							listProducts.map((p, i) => {
+								return <li key={i}>{p.productName}</li>;
+							})}
 					</ul>
 				</div>
 			</div>

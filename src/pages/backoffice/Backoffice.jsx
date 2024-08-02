@@ -1,7 +1,9 @@
+import "./backoffice.css";
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { allProducts, getListProducts } from "../../reducers/productReducer";
 import SearchbarBackoffice from "../../components/searchbarBackoffice/SearchbarBackoffice";
+import CardProduct from "../../components/cardProduct/CardProduct";
 
 export const Backoffice = () => {
 	const completeListProducts = useSelector(allProducts);
@@ -38,15 +40,22 @@ export const Backoffice = () => {
 	return (
 		<>
 			<SearchbarBackoffice onSendData={handleDataFromChild} />
-			<div className="d-flex justify-content-around">
-				<div>
-					<p>Lista prodotti</p>
-					<ul>
+			<div id="containerProducts" className="d-flex justify-content-around">
+				<div className="bg-pizzeria">
+					<div className="d-flex flex-wrap justify-content-center">
 						{listProducts &&
 							listProducts.map((p, i) => {
-								return <li key={i}>{p.productName}</li>;
+								return (
+									<CardProduct
+										key={i}
+										productName={p.productName}
+										img={p.img}
+										ingredients={p.ingredients}
+										price={p.price}
+									/>
+								);
 							})}
-					</ul>
+					</div>
 				</div>
 			</div>
 		</>

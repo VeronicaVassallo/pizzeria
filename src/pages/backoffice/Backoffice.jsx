@@ -10,22 +10,25 @@ export const Backoffice = () => {
 	const dispatch = useDispatch();
 	const [listProducts, setListProducts] = useState([]);
 	const [categoryFromChild, setCategoryFromChild] = useState("");
+	const [searchFromChild, setSearchFromChild] = useState("");
 
-	//functions
-
-	const handleDataFromChild = (dataChild) => {
-		setCategoryFromChild(dataChild);
+	const handleDataFromChild = (typology, search) => {
+		setCategoryFromChild(typology);
+		setSearchFromChild(search);
 	};
+
 	useEffect(() => {
 		dispatch(getListProducts());
 	}, [dispatch]);
 
 	const onFilterProducts = useCallback(
-		(category) => {
+		(category, search) => {
 			let productsFiltered = [];
 			if (completeListProducts && completeListProducts.products) {
-				productsFiltered = completeListProducts.products.filter((p) =>
-					p.typology.includes(category)
+				productsFiltered = completeListProducts.products.filter(
+					(p) =>
+						p.typology.includes(category) &&
+						p.productName.toLowerCase().includes(search.toLowerCase())
 				);
 				setListProducts(productsFiltered);
 			}
@@ -34,8 +37,8 @@ export const Backoffice = () => {
 	);
 
 	useEffect(() => {
-		onFilterProducts(categoryFromChild);
-	}, [categoryFromChild, completeListProducts]);
+		onFilterProducts(categoryFromChild, searchFromChild);
+	}, [categoryFromChild, searchFromChild, completeListProducts]);
 
 	return (
 		<>

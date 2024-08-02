@@ -10,9 +10,10 @@ import Jar from "../jar/Jar";
 
 const SearchbarBackoffice = ({ onSendData }) => {
 	const [typology, setTypology] = useState("");
+	const [search, setSearch] = useState("");
 
 	const sendDataToParet = () => {
-		onSendData(typology);
+		onSendData(typology, search);
 	};
 
 	return (
@@ -60,9 +61,11 @@ const SearchbarBackoffice = ({ onSendData }) => {
 						</select>
 						<Form.Control
 							type="search"
+							value={search || ""}
 							placeholder="Search"
 							className="me-2"
 							aria-label="Search"
+							onChange={(e) => setSearch(e.target.value)}
 						/>
 						<Button variant="outline-success" onClick={sendDataToParet}>
 							Cerca
